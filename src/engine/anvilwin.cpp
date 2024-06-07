@@ -23,16 +23,14 @@ GLFWwindow* anvilwin::getWindowInstance()
 
 void anvilwin::render()
 {
-    while (!glfwWindowShouldClose(m_window)) {
-        processInput(m_window);
-        glfwPollEvents();
-    }
+    processInput(m_window);
+    glfwPollEvents();
 }
 
 void anvilwin::processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS ||
-        glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS ) {
+        glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
 }

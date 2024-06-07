@@ -14,6 +14,8 @@ const std::vector<const char*> deviceExtensions = {
         VK_KHR_SWAPCHAIN_EXTENSION_NAME
 };
 
+const int MAX_FRAMES_IN_FLIGHT = 2;
+
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
 #else
@@ -54,6 +56,8 @@ private:
     VkRenderPass renderPass;
     VkPipeline graphicsPipeline;
     VkDebugUtilsMessengerEXT debugMessenger{};
+    VkCommandPool commandPool;
+    std::vector<VkCommandBuffer> commandBuffers;
     anvilwin window;
     anvilshader shader;
     std::vector<VkImage> swapChainImages;
@@ -61,6 +65,10 @@ private:
     std::vector<VkFramebuffer> swapChainFramebuffers;
     VkFormat swapChainImageFormat;
     VkExtent2D swapChainExtent;
+    std::vector<VkSemaphore> imageAvailableSemaphores;
+    std::vector<VkSemaphore> renderFinishedSemaphores;
+    std::vector<VkFence> inFlightFences;
+    uint32_t currentFrame = 0;
 
     //Classes methods
     void initVulkan();
@@ -73,7 +81,14 @@ private:
     void createRenderPass();
     void createGraphicsPipeline();
     void createFramebuffers();
+    void createCommandPool();
+    void createCommandBuffers();
+    void createSyncObjects();
     void cleanup();
+
+    //Window methods
+    void drawFrame();
+
 
     //Vulkan methods
     static bool checkValidationLayerSupport();
@@ -85,6 +100,7 @@ private:
     static VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
     static VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
     VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+    void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
     //Debug
     static void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);

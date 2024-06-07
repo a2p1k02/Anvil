@@ -5,7 +5,7 @@
 int main()
 {
     try {
-        anvilengine engine(1360, 768);
+        anvilengine engine(960, 768);
         engine.start();
     } catch (std::exception& e) {
         std::cerr << e.what() << std::endl;
