@@ -22,14 +22,14 @@ Anvil is a simple 3D engine with Vulkan API.
 ### Gentoo-based distros
 ```
 
-sudo emerge --ask media-libs/vulkan-layers media-libs/vulkan-loader dev-util/vulkan-tools dev-util/glslang
+sudo emerge --ask media-libs/vulkan-layers media-libs/vulkan-loader dev-util/vulkan-tools dev-util/glslang media-libs/glm
 
 ```
 
 ### Arch-based distros
 ```
 
-sudo pacman -S vulkan vulkan-tools vulkan-header glfw
+sudo pacman -S vulkan vulkan-tools vulkan-header glfw glm
 
 ```
 
