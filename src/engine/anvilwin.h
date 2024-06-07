@@ -10,10 +10,13 @@ public:
     ~anvilwin();
     void render();
     GLFWwindow* getWindowInstance();
+
+    static bool framebufferResized;
 private:
     GLFWwindow* m_window;
 
     static void processInput(GLFWwindow* window);
+    static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 };
 
 #endif //ANVIL_ANVILWIN_H

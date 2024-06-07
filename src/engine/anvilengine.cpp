@@ -19,6 +19,13 @@ anvilengine::~anvilengine()
 
 void anvilengine::cleanup()
 {
+    cleanupSwapChain();
+
+    vkDestroyPipeline(vkDevice, graphicsPipeline, nullptr);
+    vkDestroyPipelineLayout(vkDevice, pipelineLayout, nullptr);
+
+    vkDestroyRenderPass(vkDevice, renderPass, nullptr);
+
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         vkDestroySemaphore(vkDevice, imageAvailableSemaphores[i], nullptr);
         vkDestroySemaphore(vkDevice, renderFinishedSemaphores[i], nullptr);
@@ -27,19 +34,6 @@ void anvilengine::cleanup()
 
     vkDestroyCommandPool(vkDevice, commandPool, nullptr);
 
-    for (auto framebuffer : swapChainFramebuffers) {
-        vkDestroyFramebuffer(vkDevice, framebuffer, nullptr);
-    }
-
-    vkDestroyPipeline(vkDevice, graphicsPipeline, nullptr);
-    vkDestroyPipelineLayout(vkDevice, pipelineLayout, nullptr);
-    vkDestroyRenderPass(vkDevice, renderPass, nullptr);
-
-    for (auto imageView : swapChainImageViews) {
-        vkDestroyImageView(vkDevice, imageView, nullptr);
-    }
-
-    vkDestroySwapchainKHR(vkDevice, swapChain, nullptr);
     vkDestroyDevice(vkDevice, nullptr);
 
     if (enableValidationLayers) {
@@ -66,11 +60,18 @@ void anvilengine::start()
 void anvilengine::drawFrame()
 {
     vkWaitForFences(vkDevice, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
-    vkResetFences(vkDevice, 1, &inFlightFences[currentFrame]);
 
     uint32_t imageIndex;
-    vkAcquireNextImageKHR(vkDevice, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame],
-                          VK_NULL_HANDLE, &imageIndex);
+    VkResult result = vkAcquireNextImageKHR(vkDevice, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+
+    if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+        recreateSwapChain();
+        return;
+    } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+        throw std::runtime_error("failed to acquire swap chain image!");
+    }
+
+    vkResetFences(vkDevice, 1, &inFlightFences[currentFrame]);
 
     vkResetCommandBuffer(commandBuffers[currentFrame], 0);
     recordCommandBuffer(commandBuffers[currentFrame], imageIndex);
@@ -105,7 +106,13 @@ void anvilengine::drawFrame()
     presentInfo.pImageIndices = &imageIndex;
     presentInfo.pResults = nullptr;
 
-    vkQueuePresentKHR(presentQueue, &presentInfo);
+    result = vkQueuePresentKHR(presentQueue, &presentInfo);
+    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || window.framebufferResized) {
+        window.framebufferResized = false;
+        recreateSwapChain();
+    } else if (result != VK_SUCCESS) {
+        throw std::runtime_error("failed to present swap chain image!");
+    }
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
@@ -125,6 +132,37 @@ void anvilengine::initVulkan()
     createCommandPool();
     createCommandBuffers();
     createSyncObjects();
+}
+
+void anvilengine::cleanupSwapChain()
+{
+    for (auto framebuffer : swapChainFramebuffers) {
+        vkDestroyFramebuffer(vkDevice, framebuffer, nullptr);
+    }
+
+    for (auto imageView : swapChainImageViews) {
+        vkDestroyImageView(vkDevice, imageView, nullptr);
+    }
+
+    vkDestroySwapchainKHR(vkDevice, swapChain, nullptr);
+}
+
+void anvilengine::recreateSwapChain()
+{
+    int width = 0, height = 0;
+    glfwGetFramebufferSize(window.getWindowInstance(), &width, &height);
+    while (width == 0 || height == 0) {
+        glfwGetFramebufferSize(window.getWindowInstance(), &width, &height);
+        glfwWaitEvents();
+    }
+
+    vkDeviceWaitIdle(vkDevice);
+
+    cleanupSwapChain();
+
+    createSwapChain();
+    createImageViews();
+    createFramebuffers();
 }
 
 void anvilengine::createSyncObjects()

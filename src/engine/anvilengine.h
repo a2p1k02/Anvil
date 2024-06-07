@@ -84,11 +84,12 @@ private:
     void createCommandPool();
     void createCommandBuffers();
     void createSyncObjects();
+    void recreateSwapChain();
+    void cleanupSwapChain();
     void cleanup();
 
     //Window methods
     void drawFrame();
-
 
     //Vulkan methods
     static bool checkValidationLayerSupport();
