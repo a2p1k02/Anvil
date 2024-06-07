@@ -1,12 +1,12 @@
-#include "valoshader.h"
+#include "anvilshader.h"
 
-void valoshader::setShaders(const std::string &vertexShaderPath, const std::string &fragmentShaderPath)
+void anvilshader::setShaders(const std::string &vertexShaderPath, const std::string &fragmentShaderPath)
 {
     vertexShader = readFile(vertexShaderPath);
     fragmentShader = readFile(fragmentShaderPath);
 }
 
-VkShaderModule valoshader::createShaderModule(VkDevice device, const std::vector<char> &code)
+VkShaderModule anvilshader::createShaderModule(VkDevice device, const std::vector<char> &code)
 {
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -21,7 +21,7 @@ VkShaderModule valoshader::createShaderModule(VkDevice device, const std::vector
     return shaderModule;
 }
 
-std::vector<char> valoshader::readFile(const std::string& filename)
+std::vector<char> anvilshader::readFile(const std::string& filename)
 {
     std::ifstream file(filename, std::ios::ate | std::ios::binary);
 

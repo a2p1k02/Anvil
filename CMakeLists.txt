@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.8)
 
-set(PROJECT_NAME valogen)
+set(PROJECT_NAME Anvil)
 
 set(PROJECT_FILES
         src/main.cpp
-        src/engine/valowin.h
-        src/engine/valowin.cpp
-        src/engine/valoengine.h
-        src/engine/valoengine.cpp
-        src/engine/valoshader.h
-        src/engine/valoshader.cpp
+        src/engine/anvilwin.h
+        src/engine/anvilwin.cpp
+        src/engine/anvilengine.h
+        src/engine/anvilengine.cpp
+        src/engine/anvilshader.h
+        src/engine/anvilshader.cpp
 )
 
 project(${PROJECT_NAME})

@@ -1,5 +1,5 @@
-#ifndef VALOGEN_VALOSHADER_H
-#define VALOGEN_VALOSHADER_H
+#ifndef ANVIL_ANVILSHADER_H
+#define ANVIL_ANVILSHADER_H
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -7,7 +7,7 @@
 #include <fstream>
 #include <vector>
 
-class valoshader {
+class anvilshader {
 public:
     std::vector<char> vertexShader;
     std::vector<char> fragmentShader;
@@ -20,4 +20,4 @@ private:
 };
 
 
-#endif //VALOGEN_VALOSHADER_H
+#endif //ANVIL_ANVILSHADER_H

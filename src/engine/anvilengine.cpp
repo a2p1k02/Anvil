@@ -1,4 +1,4 @@
-#include "valoengine.h"
+#include "anvilengine.h"
 
 #include <iostream>
 #include <stdexcept>
@@ -7,17 +7,17 @@
 #include <limits>
 #include <algorithm>
 
-valoengine::valoengine(int width, int height) : window(width, height)
+anvilengine::anvilengine(int width, int height) : window(width, height)
 {
     initVulkan();
 }
 
-valoengine::~valoengine()
+anvilengine::~anvilengine()
 {
     cleanup();
 }
 
-void valoengine::cleanup()
+void anvilengine::cleanup()
 {
     for (auto framebuffer : swapChainFramebuffers) {
         vkDestroyFramebuffer(vkDevice, framebuffer, nullptr);
@@ -41,17 +41,17 @@ void valoengine::cleanup()
     vkDestroySurfaceKHR(instance, surface, nullptr);
     vkDestroyInstance(instance, nullptr);
 
-    window.~valowin();
+    window.~anvilwin();
 
     physicalDevice = VK_NULL_HANDLE;
 }
 
-void valoengine::start()
+void anvilengine::start()
 {
     window.render();
 }
 
-void valoengine::initVulkan()
+void anvilengine::initVulkan()
 {
     createInstance();
     setupDebugMessenger();
@@ -65,7 +65,7 @@ void valoengine::initVulkan()
     createFramebuffers();
 }
 
-void valoengine::createFramebuffers()
+void anvilengine::createFramebuffers()
 {
     swapChainFramebuffers.resize(swapChainImageViews.size());
     for (size_t i = 0; i < swapChainImageViews.size(); i++) {
@@ -88,7 +88,7 @@ void valoengine::createFramebuffers()
     }
 }
 
-void valoengine::createRenderPass()
+void anvilengine::createRenderPass()
 {
     VkAttachmentDescription colorAttachment{};
     colorAttachment.format = swapChainImageFormat;
@@ -121,11 +121,11 @@ void valoengine::createRenderPass()
     }
 }
 
-void valoengine::createGraphicsPipeline()
+void anvilengine::createGraphicsPipeline()
 {
     shader.setShaders("../src/shaders/vert.spv", "../src/shaders/frag.spv");
-    VkShaderModule vertShaderModule = valoshader::createShaderModule(vkDevice, shader.vertexShader);
-    VkShaderModule fragShaderModule = valoshader::createShaderModule(vkDevice, shader.fragmentShader);
+    VkShaderModule vertShaderModule = anvilshader::createShaderModule(vkDevice, shader.vertexShader);
+    VkShaderModule fragShaderModule = anvilshader::createShaderModule(vkDevice, shader.fragmentShader);
 
     VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
     vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -229,7 +229,7 @@ void valoengine::createGraphicsPipeline()
 }
 
 
-void valoengine::createImageViews()
+void anvilengine::createImageViews()
 {
     swapChainImageViews.resize(swapChainImages.size());
     for (size_t i = 0; i < swapChainImages.size(); i++) {
@@ -256,7 +256,7 @@ void valoengine::createImageViews()
     }
 }
 
-void valoengine::createInstance()
+void anvilengine::createInstance()
 {
     if (enableValidationLayers && !checkValidationLayerSupport()) {
         throw std::runtime_error("validation layers requested, but not available");
@@ -266,7 +266,7 @@ void valoengine::createInstance()
     applicationInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     applicationInfo.pApplicationName = "Engine";
     applicationInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-    applicationInfo.pEngineName = "valogen";
+    applicationInfo.pEngineName = "Anvil";
     applicationInfo.engineVersion = VK_MAKE_VERSION(0, 0, 1);
     applicationInfo.apiVersion = VK_API_VERSION_1_0;
 
@@ -297,7 +297,7 @@ void valoengine::createInstance()
     }
 }
 
-void valoengine::createLogicalDevice()
+void anvilengine::createLogicalDevice()
 {
     QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
@@ -341,14 +341,14 @@ void valoengine::createLogicalDevice()
     vkGetDeviceQueue(vkDevice, indices.presentFamily.value(), 0, &presentQueue);
 }
 
-void valoengine::createSurface()
+void anvilengine::createSurface()
 {
     if (glfwCreateWindowSurface(instance, window.getWindowInstance(), nullptr, &surface) != VK_SUCCESS) {
         throw std::runtime_error("failed to create window surface");
     }
 }
 
-void valoengine::pickPhysicalDevice()
+void anvilengine::pickPhysicalDevice()
 {
     uint32_t deviceCount = 0;
     vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
@@ -372,7 +372,7 @@ void valoengine::pickPhysicalDevice()
     }
 }
 
-void valoengine::createSwapChain()
+void anvilengine::createSwapChain()
 {
     SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice);
     VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
@@ -425,7 +425,7 @@ void valoengine::createSwapChain()
     swapChainExtent = extent;
 }
 
-bool valoengine::isDeviceSuitable(VkPhysicalDevice device)
+bool anvilengine::isDeviceSuitable(VkPhysicalDevice device)
 {
     QueueFamilyIndices indices = findQueueFamilies(device);
     bool extensionSupported = checkDeviceExtensionSupport(device);
@@ -439,7 +439,7 @@ bool valoengine::isDeviceSuitable(VkPhysicalDevice device)
     return indices.isComplete() && extensionSupported && swapChaiAdequate;
 }
 
-bool valoengine::checkDeviceExtensionSupport(VkPhysicalDevice device)
+bool anvilengine::checkDeviceExtensionSupport(VkPhysicalDevice device)
 {
     uint32_t extensionCount;
     vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
@@ -456,7 +456,7 @@ bool valoengine::checkDeviceExtensionSupport(VkPhysicalDevice device)
     return requiredExtensions.empty();
 }
 
-QueueFamilyIndices valoengine::findQueueFamilies(VkPhysicalDevice device)
+QueueFamilyIndices anvilengine::findQueueFamilies(VkPhysicalDevice device)
 {
     QueueFamilyIndices indices;
     uint32_t queueFamilyCount = 0;
@@ -486,7 +486,7 @@ QueueFamilyIndices valoengine::findQueueFamilies(VkPhysicalDevice device)
     return indices;
 }
 
-SwapChainSupportDetails valoengine::querySwapChainSupport(VkPhysicalDevice device)
+SwapChainSupportDetails anvilengine::querySwapChainSupport(VkPhysicalDevice device)
 {
     SwapChainSupportDetails details;
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
@@ -510,7 +510,7 @@ SwapChainSupportDetails valoengine::querySwapChainSupport(VkPhysicalDevice devic
     return details;
 }
 
-VkSurfaceFormatKHR valoengine::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats)
+VkSurfaceFormatKHR anvilengine::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats)
 {
     for (const auto& availableFormat : availableFormats) {
         if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
@@ -520,7 +520,7 @@ VkSurfaceFormatKHR valoengine::chooseSwapSurfaceFormat(const std::vector<VkSurfa
     return availableFormats[0];
 }
 
-VkPresentModeKHR valoengine::chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes)
+VkPresentModeKHR anvilengine::chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes)
 {
     for (const auto& availablePresentMode : availablePresentModes) {
         if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
@@ -530,7 +530,7 @@ VkPresentModeKHR valoengine::chooseSwapPresentMode(const std::vector<VkPresentMo
     return VK_PRESENT_MODE_FIFO_KHR;
 }
 
-VkExtent2D valoengine::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
+VkExtent2D anvilengine::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
 {
     if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
         return capabilities.currentExtent;
@@ -550,7 +550,7 @@ VkExtent2D valoengine::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabili
     }
 }
 
-bool valoengine::checkValidationLayerSupport()
+bool anvilengine::checkValidationLayerSupport()
 {
     uint32_t layerCount;
     vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
@@ -574,7 +574,7 @@ bool valoengine::checkValidationLayerSupport()
     return true;
 }
 
-std::vector<const char *> valoengine::getRequiredExtensions()
+std::vector<const char *> anvilengine::getRequiredExtensions()
 {
     uint32_t  glfwExtensionCount = 0;
     const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -588,7 +588,7 @@ std::vector<const char *> valoengine::getRequiredExtensions()
     return extensions;
 }
 
-void valoengine::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
+void anvilengine::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
 {
     createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -597,7 +597,7 @@ void valoengine::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInf
     createInfo.pfnUserCallback = debugCallback;
 }
 
-VkBool32 valoengine::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+VkBool32 anvilengine::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                                    VkDebugUtilsMessageTypeFlagsEXT messageType,
                                    const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData, void *pUserData)
 {
@@ -605,7 +605,7 @@ VkBool32 valoengine::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messag
     return VK_FALSE;
 }
 
-void valoengine::setupDebugMessenger()
+void anvilengine::setupDebugMessenger()
 {
     if (!enableValidationLayers) return;
 
@@ -617,7 +617,7 @@ void valoengine::setupDebugMessenger()
     }
 }
 
-VkResult valoengine::CreateDebugUtilsMessengerEXT(VkInstance vkInstance,
+VkResult anvilengine::CreateDebugUtilsMessengerEXT(VkInstance vkInstance,
                                                   const VkDebugUtilsMessengerCreateInfoEXT *pCreateInfo,
                                                   const VkAllocationCallbacks *pAllocator,
                                                   VkDebugUtilsMessengerEXT *pDebugMessenger)
@@ -630,7 +630,7 @@ VkResult valoengine::CreateDebugUtilsMessengerEXT(VkInstance vkInstance,
     }
 }
 
-void valoengine::DestroyDebugUtilsMessengerEXT(VkInstance instance,
+void anvilengine::DestroyDebugUtilsMessengerEXT(VkInstance instance,
                                                VkDebugUtilsMessengerEXT debugMessenger,
                                                const VkAllocationCallbacks *pAllocator)
 {

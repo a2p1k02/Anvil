@@ -1,10 +1,10 @@
-#ifndef VALOGEN_VALOENGINE_H
-#define VALOGEN_VALOENGINE_H
+#ifndef ANVIL_ANVILENGINE_H
+#define ANVIL_ANVILENGINE_H
 
 #include <vector>
 #include <optional>
-#include "valowin.h"
-#include "valoshader.h"
+#include "anvilwin.h"
+#include "anvilshader.h"
 
 const std::vector<const char*> validationLayers = {
         "VK_LAYER_KHRONOS_validation"
@@ -36,10 +36,10 @@ struct QueueFamilyIndices {
     }
 };
 
-class valoengine {
+class anvilengine {
 public:
-    valoengine(int width, int height);
-    ~valoengine();
+    anvilengine(int width, int height);
+    ~anvilengine();
     void start();
 private:
     //Objects
@@ -54,8 +54,8 @@ private:
     VkRenderPass renderPass;
     VkPipeline graphicsPipeline;
     VkDebugUtilsMessengerEXT debugMessenger{};
-    valowin window;
-    valoshader shader;
+    anvilwin window;
+    anvilshader shader;
     std::vector<VkImage> swapChainImages;
     std::vector<VkImageView> swapChainImageViews;
     std::vector<VkFramebuffer> swapChainFramebuffers;
@@ -106,4 +106,4 @@ private:
 
 };
 
-#endif //VALOGEN_VALOENGINE_H
+#endif //ANVIL_ANVILENGINE_H

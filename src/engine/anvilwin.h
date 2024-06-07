@@ -1,13 +1,13 @@
-#ifndef VALOGEN_VALOWIN_H
-#define VALOGEN_VALOWIN_H
+#ifndef ANVIL_ANVILWIN_H
+#define ANVIL_ANVILWIN_H
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-class valowin {
+class anvilwin {
 public:
-    valowin(int width, int height);
-    ~valowin();
+    anvilwin(int width, int height);
+    ~anvilwin();
     void render();
     GLFWwindow* getWindowInstance();
 private:
@@ -16,4 +16,4 @@ private:
     static void processInput(GLFWwindow* window);
 };
 
-#endif //VALOGEN_VALOWIN_H
+#endif //ANVIL_ANVILWIN_H

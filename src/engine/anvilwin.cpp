@@ -1,27 +1,27 @@
-#include "valowin.h"
+#include "anvilwin.h"
 
-valowin::valowin(int width, int height)
+anvilwin::anvilwin(int width, int height)
 {
     glfwInit();
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-    m_window = glfwCreateWindow(width, height, "valogen", nullptr, nullptr);
+    m_window = glfwCreateWindow(width, height, "Anvil", nullptr, nullptr);
 }
 
-valowin::~valowin()
+anvilwin::~anvilwin()
 {
     glfwDestroyWindow(m_window);
     glfwTerminate();
 }
 
-GLFWwindow* valowin::getWindowInstance()
+GLFWwindow* anvilwin::getWindowInstance()
 {
     return m_window;
 }
 
-void valowin::render()
+void anvilwin::render()
 {
     while (!glfwWindowShouldClose(m_window)) {
         processInput(m_window);
@@ -29,7 +29,7 @@ void valowin::render()
     }
 }
 
-void valowin::processInput(GLFWwindow* window)
+void anvilwin::processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS ||
         glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS ) {
