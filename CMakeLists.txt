@@ -10,6 +10,8 @@ set(PROJECT_FILES
         src/engine/anvilengine.cpp
         src/engine/anvilshader.h
         src/engine/anvilshader.cpp
+        src/engine/anvilutils.cpp
+        src/engine/anvilutils.h
 )
 
 project(${PROJECT_NAME})
