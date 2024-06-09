@@ -122,6 +122,7 @@ private:
     //Engine fields
     anvilwin window;
     anvilshader shader;
+    glm::vec3 cameraView;
 
     //Classes methods
     void initVulkan();
