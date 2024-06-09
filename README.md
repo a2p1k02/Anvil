@@ -4,6 +4,9 @@
 ## Description
 Anvil is a simple 3D engine with Vulkan API.
 
+## Controls
+- <kbd>**Esc**</kbd> - exit
+
 ## Features
 - [x] Window system
 - [x] Shader class
@@ -14,10 +17,9 @@ Anvil is a simple 3D engine with Vulkan API.
 - [ ] Models loading
 - [ ] Text
 - [ ] GUI
-      
 
 ## Install dependencies
-### Windows is NOT supported
+### Windows IS supported by last commit!
 ### I don't have official supporting another distros
 ### Gentoo-based distros
 ```
