@@ -123,6 +123,7 @@ private:
     anvilwin window;
     anvilshader shader;
     glm::vec3 cameraView;
+    glm::vec3 directionView;
 
     //Classes methods
     void initVulkan();
