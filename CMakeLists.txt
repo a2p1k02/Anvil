@@ -14,11 +14,13 @@ set(PROJECT_FILES
         src/engine/anvilutils.h
 )
 
-add_subdirectory(libs/glfw)
-add_subdirectory(libs/glm)
+if (WIN32)
+    add_subdirectory(libs/glfw)
+    add_subdirectory(libs/glm)
 
-find_package(Vulkan REQUIRED)
-set(VULKAN_SDK_PATH "D:/VulkanSDK/1.3.283.0") # Change that to your path
+    find_package(Vulkan REQUIRED)
+    set(VULKAN_SDK_PATH "D:/VulkanSDK/1.3.283.0") # Change that to your path
+endif ()
 
 project(${PROJECT_NAME})
 
